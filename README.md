@@ -89,7 +89,7 @@ This config uses **Treesitter** and **Mason** for language support.
 
 3. **Configure LSPs**
 
-   * Go to the `nvim/` folder and edit the file `invim/init.lua`.
+   * Go to the `nvim/` folder and edit the file `nvim/init.lua`.
    * Add entries like:
 
      ```lua
