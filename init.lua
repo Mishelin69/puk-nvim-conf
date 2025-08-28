@@ -2,8 +2,10 @@ require("mishelin")
 
 -- LSP Diagnostics Options Setup
 
-require'lspconfig'.pyright.setup{}
-require'lspconfig'.clangd.setup{}
+-- require'lspconfig'.pyright.setup{}
+-- require'lspconfig'.clangd.setup{}
+vim.lsp.enable('pyright')
+vim.lsp.enable('clangd')
 
 local rt = require("rust-tools")
 
@@ -56,6 +58,9 @@ rt.setup({
       -- Code action groups
       vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
     end,
+    flags = {
+      allow_incremental_sync = true,
+    },
   },
 })
 
