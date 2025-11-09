@@ -104,6 +104,13 @@ _G.packer_plugins = {
     path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/cmp-vsnip",
     url = "https://github.com/hrsh7th/cmp-vsnip"
   },
+  ["ferris.nvim"] = {
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/mishelin/.local/share/nvim/site/pack/packer/opt/ferris.nvim",
+    url = "https://github.com/vxpm/ferris.nvim"
+  },
   ["gruvbox-material"] = {
     loaded = true,
     path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/gruvbox-material",
@@ -149,11 +156,6 @@ _G.packer_plugins = {
     path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
   },
-  ["rust-tools.nvim"] = {
-    loaded = true,
-    path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/rust-tools.nvim",
-    url = "https://github.com/simrat39/rust-tools.nvim"
-  },
   ["telescope-fzf-native.nvim"] = {
     loaded = true,
     path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/telescope-fzf-native.nvim",
@@ -177,6 +179,13 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+vim.cmd [[augroup packer_load_aucmds]]
+vim.cmd [[au!]]
+  -- Filetype lazy-loads
+time([[Defining lazy-load filetype autocommands]], true)
+vim.cmd [[au FileType rust ++once lua require("packer.load")({'ferris.nvim'}, { ft = "rust" }, _G.packer_plugins)]]
+time([[Defining lazy-load filetype autocommands]], false)
+vim.cmd("augroup END")
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then

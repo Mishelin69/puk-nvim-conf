@@ -15,12 +15,11 @@ return require('packer').startup(function(use)
   use 'williamboman/mason-lspconfig.nvim'
 
   use 'neovim/nvim-lspconfig'
-  use 'simrat39/rust-tools.nvim'
+
+  use { 'vxpm/ferris.nvim', ft = { "rust" } }
 
   use 'hrsh7th/nvim-cmp'
-
   use 'hrsh7th/cmp-nvim-lsp'
-
   use 'hrsh7th/cmp-nvim-lua'
   use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'hrsh7th/cmp-vsnip'
