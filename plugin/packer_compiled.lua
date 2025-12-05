@@ -156,6 +156,11 @@ _G.packer_plugins = {
     path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
   },
+  ["roslyn.nvim"] = {
+    loaded = true,
+    path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/roslyn.nvim",
+    url = "https://github.com/seblyng/roslyn.nvim"
+  },
   ["telescope-fzf-native.nvim"] = {
     loaded = true,
     path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/telescope-fzf-native.nvim",

@@ -2,7 +2,12 @@ require("mishelin")
 
 -- LSP Diagnostics Options Setup
 
-require("mason").setup()
+require("mason").setup({
+    registries = {
+        "github:mason-org/mason-registry",
+        "github:Crashdummyy/mason-registry",
+    },
+})
 require("mason-lspconfig").setup({
   ensure_installed = { "rust_analyzer", "clangd", "pyright" },
 })
@@ -10,6 +15,54 @@ require("mason-lspconfig").setup({
 -- Enable LSP servers using new API
 vim.lsp.enable('pyright')
 vim.lsp.enable('clangd')
+
+-- Roslyn configuration
+local cmp = require'cmp'
+
+require("roslyn").setup({
+    -- Pass capabilities so the server knows you want completions
+    capabilities = cmp,
+    
+    -- Configuration passed here will eventually be merged into the client
+    config = {
+        settings = {
+            ["csharp|inlay_hints"] = {
+                csharp_enable_inlay_hints_for_implicit_object_creation = true,
+                csharp_enable_inlay_hints_for_implicit_variable_types = true,
+                csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+                csharp_enable_inlay_hints_for_types = true,
+            },
+            ["csharp|code_lens"] = {
+                dotnet_enable_references_code_lens = true,
+            },
+        },
+    },
+    
+    -- Explicitly point to the Mason binary if needed
+    exe = {
+        "dotnet",
+        vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "packages", "roslyn", "libexec", "Microsoft.CodeAnalysis.LanguageServer.dll"),
+    },
+})
+
+-- 3. MODERN KEYMAPS (The 0.11 way)
+-- Instead of an "on_attach" callback inside the setup function, 
+-- use the global LspAttach autocommand. This applies to Roslyn AND other servers.
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local buffer = args.buf
+
+        -- Example: Enable inlay hints if the server supports it (Roslyn does)
+        if client and client.server_capabilities.inlayHintProvider then
+            vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+        end
+
+        -- Example: Keymaps
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = buffer, desc = "Go to Definition" })
+        vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = buffer, desc = "Go to References" })
+    end,
+})
 
 -- Rust-analyzer configuration
 vim.lsp.enable('rust_analyzer', {
@@ -118,7 +171,6 @@ set foldlevel=100
 autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 ]])
 -- Completion Plugin Setup
-local cmp = require'cmp'
 cmp.setup({
     -- Enable LSP snippets
     snippet = {
