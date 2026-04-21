@@ -9,21 +9,55 @@ require("mason").setup({
     },
 })
 require("mason-lspconfig").setup({
-  ensure_installed = { "rust_analyzer", "clangd", "pyright" },
+  ensure_installed = { "rust_analyzer", "clangd", "basedpyright", "roslyn", "ruff"},
 })
 
--- Enable LSP servers using new API
-vim.lsp.enable('pyright')
 vim.lsp.enable('clangd')
 
--- Roslyn configuration
+local function get_python_path(workspace)
+  if vim.env.VIRTUAL_ENV then
+    return vim.fs.joinpath(vim.env.VIRTUAL_ENV, 'bin', 'python')
+  end
+
+  local venv_path = vim.fs.joinpath(workspace, '.venv', 'bin', 'python')
+  if vim.fn.executable(venv_path) == 1 then
+    return venv_path
+  end
+
+  return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+end
+
+vim.lsp.config('basedpyright', {
+  on_new_config = function(config, root_dir)
+    config.settings.python.pythonPath = get_python_path(root_dir)
+  end,
+  
+  settings = {
+    python = {},
+    basedpyright = {
+      analysis = {
+        typeCheckingMode = "basic", -- Options: "off", "basic", "standard", "strict"
+        useLibraryCodeForTypes = true,
+      }
+    }
+  }
+})
+
+vim.lsp.enable('basedpyright')
+
+vim.lsp.config('ruff', {
+  on_attach = function(client, bufnr)
+    client.server_capabilities.hoverProvider = false
+  end
+})
+
+vim.lsp.enable('ruff')
+
 local cmp = require'cmp'
 
 require("roslyn").setup({
-    -- Pass capabilities so the server knows you want completions
     capabilities = cmp,
     
-    -- Configuration passed here will eventually be merged into the client
     config = {
         settings = {
             ["csharp|inlay_hints"] = {
@@ -38,36 +72,28 @@ require("roslyn").setup({
         },
     },
     
-    -- Explicitly point to the Mason binary if needed
     exe = {
         "dotnet",
         vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "packages", "roslyn", "libexec", "Microsoft.CodeAnalysis.LanguageServer.dll"),
     },
 })
 
--- 3. MODERN KEYMAPS (The 0.11 way)
--- Instead of an "on_attach" callback inside the setup function, 
--- use the global LspAttach autocommand. This applies to Roslyn AND other servers.
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         local buffer = args.buf
 
-        -- Example: Enable inlay hints if the server supports it (Roslyn does)
         if client and client.server_capabilities.inlayHintProvider then
             vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
         end
 
-        -- Example: Keymaps
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = buffer, desc = "Go to Definition" })
         vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = buffer, desc = "Go to References" })
     end,
 })
 
--- Rust-analyzer configuration
 vim.lsp.enable('rust_analyzer', {
   on_attach = function(client, bufnr)
-    -- Enable end-of-line hints
     require("lsp-endhints").on_attach(bufnr)
 
     -- Keymaps
@@ -80,7 +106,7 @@ vim.lsp.enable('rust_analyzer', {
       cargo = { allFeatures = true },
       check = {
         command = "clippy",
-        onSave = "on_change", -- update diagnostics while typing
+        onSave = "on_change",
       },
       diagnostics = {
         enable = true,
