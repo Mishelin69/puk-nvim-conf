@@ -142,6 +142,7 @@ _G.packer_plugins = {
     url = "https://github.com/neovim/nvim-lspconfig"
   },
   ["nvim-treesitter"] = {
+    config = { "\27LJ\2\nä\2\0\0\6\0\r\0\0196\0\0\0006\2\1\0'\3\2\0B\0\3\3\14\0\0\0X\2\1€K\0\1\0009\2\3\0015\4\5\0005\5\4\0=\5\6\0045\5\a\0=\5\b\0045\5\t\0=\5\n\0045\5\v\0=\5\f\4B\2\2\1K\0\1\0\frainbow\1\0\3\19max_file_lines\0\venable\2\18extended_mode\2\vindent\1\0\1\venable\2\14highlight\1\0\2&additional_vim_regex_highlighting\1\venable\2\21ensure_installed\1\0\5\17auto_install\2\frainbow\0\21ensure_installed\0\vindent\0\14highlight\0\1\5\0\0\blua\trust\ttoml\vpython\nsetup\28nvim-treesitter.configs\frequire\npcall\0" },
     loaded = true,
     path = "/home/mishelin/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
     url = "https://github.com/nvim-treesitter/nvim-treesitter"
@@ -184,6 +185,10 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: nvim-treesitter
+time([[Config for nvim-treesitter]], true)
+try_loadstring("\27LJ\2\nä\2\0\0\6\0\r\0\0196\0\0\0006\2\1\0'\3\2\0B\0\3\3\14\0\0\0X\2\1€K\0\1\0009\2\3\0015\4\5\0005\5\4\0=\5\6\0045\5\a\0=\5\b\0045\5\t\0=\5\n\0045\5\v\0=\5\f\4B\2\2\1K\0\1\0\frainbow\1\0\3\19max_file_lines\0\venable\2\18extended_mode\2\vindent\1\0\1\venable\2\14highlight\1\0\2&additional_vim_regex_highlighting\1\venable\2\21ensure_installed\1\0\5\17auto_install\2\frainbow\0\21ensure_installed\0\vindent\0\14highlight\0\1\5\0\0\blua\trust\ttoml\vpython\nsetup\28nvim-treesitter.configs\frequire\npcall\0", "config", "nvim-treesitter")
+time([[Config for nvim-treesitter]], false)
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
