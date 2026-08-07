@@ -9,7 +9,7 @@ require("mason").setup({
     },
 })
 require("mason-lspconfig").setup({
-  ensure_installed = { "rust_analyzer", "clangd", "basedpyright", "roslyn", "ruff"},
+  ensure_installed = { "rust_analyzer", "clangd", "basedpyright", "ruff"},
 })
 
 vim.lsp.enable('clangd')
@@ -247,21 +247,3 @@ cmp.setup({
         end,
     },
 })
-
--- Treesitter Plugin Setup 
-require('nvim-treesitter.configs').setup {
-    ensure_installed = { "lua", "rust", "toml", "python" },
-    auto_install = true,
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting=false,
-    },
-    ident = { enable = true }, 
-    rainbow = {
-        enable = true,
-        extended_mode = true,
-        max_file_lines = nil,
-    }
-}
-
-
